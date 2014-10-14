@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@ --parallel
+
+build: build-stamp
+build-stamp:
+	qmake-qt4 "QMAKE_CXXFLAGS_RELEASE += $(CFLAGS)"
+	$(MAKE)
+	touch $@
+
+clean:
+	dh clean
+	rm -f *.qm
+	rm -f ui_unetbootin.h
+
+install: build
+	dh install -punetbootin
+
+# Build architecture-independent files here.
+binary-indep:
+	lrelease-qt4 unetbootin.pro
+	dh_install --sourcedir=$(CURDIR) -punetbootin-translations
+	dh binary-indep
+
+# Build architecture-dependent files here.
+binary-arch: install
+	dh binary-arch
+
+binary: binary-indep binary-arch
+
+.PHONY: build binary-indep binary-arch install

@@ -673,7 +673,11 @@ void unetbootin::on_diskimagetypeselect_currentIndexChanged()
 
 void unetbootin::on_FloppyFileSelector_clicked()
 {
-	QString nameFloppy = QDir::toNativeSeparators(QFileDialog::getOpenFileName(this, tr("Open Disk Image File"), QDir::homePath(), tr("All Files") + " (*);;" + tr("ISO") + " (*.iso);;" + tr("Floppy") + " (*.img)"));
+    QString nameFloppy = QDir::toNativeSeparators(QFileDialog::getOpenFileName(this, tr("Open Disk Image File"), QDir::homePath(), tr("All Files") + " (*);;" + tr("ISO") + " (*.iso);;" + tr("Floppy") + " (*.img)", 0
+    #if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
+    , QFileDialog::ReadOnly
+    #endif
+    ));
 	if (QFileInfo(nameFloppy).completeSuffix().contains("iso", Qt::CaseInsensitive))
 	{
 		if (diskimagetypeselect->findText(tr("ISO")) != -1)
@@ -691,7 +695,11 @@ void unetbootin::on_FloppyFileSelector_clicked()
 
 void unetbootin::on_KernelFileSelector_clicked()
 {
-	QString nameKernel = QDir::toNativeSeparators(QFileDialog::getOpenFileName(this, tr("Open Kernel File"), QDir::homePath(), tr("All Files (*)")));
+    QString nameKernel = QDir::toNativeSeparators(QFileDialog::getOpenFileName(this, tr("Open Kernel File"), QDir::homePath(), tr("All Files (*)"), 0
+    #if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
+    , QFileDialog::ReadOnly
+    #endif
+    ));
 	KernelPath->clear();
 	KernelPath->insert(nameKernel);
 	radioManual->setChecked(true);
@@ -699,7 +707,11 @@ void unetbootin::on_KernelFileSelector_clicked()
 
 void unetbootin::on_InitrdFileSelector_clicked()
 {
-	QString nameInitrd = QDir::toNativeSeparators(QFileDialog::getOpenFileName(this, tr("Open Initrd File"), QDir::homePath(), tr("All Files (*)")));
+    QString nameInitrd = QDir::toNativeSeparators(QFileDialog::getOpenFileName(this, tr("Open Initrd File"), QDir::homePath(), tr("All Files (*)"), 0
+    #if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
+    , QFileDialog::ReadOnly
+    #endif
+    ));
 	InitrdPath->clear();
 	InitrdPath->insert(nameInitrd);
 	radioManual->setChecked(true);
@@ -707,7 +719,11 @@ void unetbootin::on_InitrdFileSelector_clicked()
 
 void unetbootin::on_CfgFileSelector_clicked()
 {
-	QString nameCfg = QFileDialog::getOpenFileName(this, tr("Open Bootloader Config File"), QDir::homePath(), tr("All Files (*)"));
+    QString nameCfg = QFileDialog::getOpenFileName(this, tr("Open Bootloader Config File"), QDir::homePath(), tr("All Files (*)"), 0
+    #if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
+    , QFileDialog::ReadOnly
+    #endif
+    );
 	OptionEnter->clear();
 	QString cfgoptstxt = getcfgkernargs(nameCfg, "", QStringList(), QStringList());
 	if (cfgoptstxt.isEmpty())
@@ -725,7 +741,7 @@ void unetbootin::on_cancelbutton_clicked()
 
 void unetbootin::on_okbutton_clicked()
 {
-	if (typeselect->currentIndex() == typeselect->findText(tr("USB Drive")) && driveselect->currentText().isEmpty())
+    if (typeselect->currentIndex() == typeselect->findText(tr("USB Drive")) && driveselect->currentText().isEmpty() && !testingDownload)
 	{
 		QMessageBox unotenoughinputmsgb;
 		unotenoughinputmsgb.setIcon(QMessageBox::Information);
@@ -741,7 +757,7 @@ void unetbootin::on_okbutton_clicked()
 		}
 	}
 #ifdef Q_OS_MAC
-	if (locatemountpoint(driveselect->currentText()) == "NOT MOUNTED")
+    if (locatemountpoint(driveselect->currentText()) == "NOT MOUNTED" && !testingDownload)
 		callexternapp("diskutil", "mount "+driveselect->currentText());
 #endif
 	#ifdef Q_OS_LINUX
@@ -862,11 +878,6 @@ void unetbootin::on_fexitbutton_clicked()
 	close();
 }
 
-void unetbootin::on_frebootbutton_clicked()
-{
-	sysreboot();
-}
-
 QString unetbootin::displayfisize(quint64 fisize)
 {
 	if (fisize < 10000)
@@ -974,7 +985,7 @@ bool unetbootin::ignoreoutofspaceprompt(QString destindir)
 	overwritefilemsgbx.setIcon(QMessageBox::Warning);
 	overwritefilemsgbx.setWindowTitle(QString(tr("%1 is out of space, abort installation?")).arg(destindir));
 	overwritefilemsgbx.setText(QString(tr("The directory %1 is out of space. Press 'Yes' to abort installation, 'No' to ignore this error and attempt to continue installation, and 'No to All' to ignore all out-of-space errors.")).arg(destindir));
-	overwritefilemsgbx.setStandardButtons(QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No);
+	overwritefilemsgbx.setStandardButtons(QMessageBox::Yes | QMessageBox::NoToAll | QMessageBox::No);
 	switch (overwritefilemsgbx.exec())
 	{
 		case QMessageBox::Yes:
@@ -2702,8 +2713,6 @@ void unetbootin::showDownloadFailedScreen(const QString &fileurl)
 	rebootlayer->setEnabled(true);
 	rebootlayer->show();
 	rebootmsgtext->setText(tr("Download of %1 %2 from %3 failed. Please try downloading the ISO file from the website directly and supply it via the diskimage option.").arg(nameDistro).arg(nameVersion).arg(fileurl));
-	this->frebootbutton->setEnabled(false);
-	this->frebootbutton->hide();
 	this->downloadFailed = true;
 	if (exitOnCompletion)
 	{
@@ -2894,25 +2903,6 @@ QPair<QString, int> unetbootin::filterBestMatch(QStringList ufStringList, QList<
 	return qMakePair(hRegxMatchString, hRegxMatch);
 }
 
-void unetbootin::sysreboot()
-{
-	#ifdef Q_OS_WIN32
-	HANDLE hToken;
-	TOKEN_PRIVILEGES tkp;
-	OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);
-	LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid);
-	tkp.PrivilegeCount = 1;
-	tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-	AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
-	ExitWindowsEx(EWX_REBOOT, EWX_FORCE);
-	#endif
-	#ifdef Q_OS_LINUX
-	callexternapp("init", "6 &");
-	#endif
-#ifdef Q_OS_MAC
-callexternapp("shutdown", "-r now &");
-#endif
-}
 
 QString unetbootin::callexternapp(QString xexecFile, QString xexecParm)
 {
@@ -3376,13 +3366,29 @@ void unetbootin::instIndvfl(QString srcfName, QString dstfName)
 	if (srcfName == "memdisk")
 				srcF.setFileName(QFile::exists("/usr/share/syslinux/memdisk") ? "/usr/share/syslinux/memdisk" : "/usr/lib/syslinux/memdisk");
 	else if (srcfName == "menu.c32")
+	{
 				srcF.setFileName(QFile::exists("/usr/share/syslinux/menu.c32") ? "/usr/share/syslinux/menu.c32" : "/usr/lib/syslinux/menu.c32");
+				if (QFile::exists("/usr/lib/syslinux/modules/bios/menu.c32"))
+					srcF.setFileName("/usr/lib/syslinux/modules/bios/menu.c32");
+	}
     else if (srcfName == "libutil.c32")
+	{
                 srcF.setFileName(QFile::exists("/usr/share/syslinux/libutil.c32") ? "/usr/share/syslinux/libutil.c32" : "/usr/lib/syslinux/libutil.c32");
+		if (QFile::exists("/usr/lib/syslinux/modules/bios/libutil.c32"))
+			srcF.setFileName("/usr/lib/syslinux/modules/bios/libutil.c32");
+	}
     else if (srcfName == "libcom32.c32")
+	{
                 srcF.setFileName(QFile::exists("/usr/share/syslinux/libcom32.c32") ? "/usr/share/syslinux/libcom32.c32" : "/usr/lib/syslinux/libcom32.c32");
+		if (QFile::exists("/usr/lib/syslinux/modules/bios/libcom32.c32"))
+			srcF.setFileName("/usr/lib/syslinux/modules/bios/libcom32.c32");
+	}
     else if (srcfName == "mbr.bin")
-				srcF.setFileName(QFile::exists("/usr/share/syslinux/mbr.bin") ? "/usr/share/syslinux/mbr.bin" : "/usr/lib/syslinux/mbr.bin");
+	{
+			srcF.setFileName(QFile::exists("/usr/share/syslinux/mbr.bin") ? "/usr/share/syslinux/mbr.bin" : "/usr/lib/syslinux/mbr.bin");
+		if (QFile::exists("/usr/lib/syslinux/mbr/mbr.bin"))
+			srcF.setFileName("/usr/lib/syslinux/mbr/mbr.bin");
+	}
 	else if (srcfName == "ubnsylnx")
 		srcF.setFileName("/usr/bin/syslinux");
 //	else
@@ -4118,6 +4124,8 @@ void unetbootin::runinstusb()
 			QFile mbrbinF(":/mbr.bin");
 			#ifdef NOSTATIC
 			mbrbinF.setFileName(QFile::exists("/usr/share/syslinux/mbr.bin") ? "/usr/share/syslinux/mbr.bin" : "/usr/lib/syslinux/mbr.bin");
+			if (QFile::exists("/usr/lib/syslinux/mbr/mbr.bin"))
+				mbrbinF.setFileName("/usr/lib/syslinux/mbr/mbr.bin");
 			#endif
 			usbmbrF.open(QIODevice::WriteOnly);
 			mbrbinF.open(QIODevice::ReadOnly);
@@ -4290,17 +4298,15 @@ void unetbootin::fininstall()
 	sdesc4->setText(QString("<b>%1 %2</b>").arg(sdesc4->text()).arg(trcurrent));
 	if (installType == tr("Hard Disk"))
 	{
-		rebootmsgtext->setText(tr("After rebooting, select the "UNETBOOTINB" menu entry to boot.%1\nReboot now?").arg(postinstmsg));
+		rebootmsgtext->setText(tr("After rebooting, select the "UNETBOOTINB" menu entry to boot.%1").arg(postinstmsg));
 	}
 	if (installType == tr("USB Drive"))
 	{
 #ifndef Q_OS_MAC
-		rebootmsgtext->setText(tr("After rebooting, select the USB boot option in the BIOS boot menu.%1\nReboot now?").arg(postinstmsg));
+		rebootmsgtext->setText(tr("After rebooting, select the USB boot option in the BIOS boot menu.%1").arg(postinstmsg));
 #endif
 #ifdef Q_OS_MAC
 		rebootmsgtext->setText(tr("The created USB device will not boot off a Mac. Insert it into a PC, and select the USB boot option in the BIOS boot menu.%1").arg(postinstmsg));
-		this->frebootbutton->setEnabled(false);
-		this->frebootbutton->hide();
 #endif
 	}
     finishLogging();

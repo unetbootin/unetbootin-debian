@@ -1,3 +1,9 @@
+unetbootin (625-1) unstable; urgency=medium
+
+  * Import Upstream version 625
+
+ -- Geza Kovacs <geza0kovacs@gmail.com>  Mon, 16 May 2016 02:30:23 -0700
+
 unetbootin (624-1) unstable; urgency=low
 
   * Import Upstream version 624

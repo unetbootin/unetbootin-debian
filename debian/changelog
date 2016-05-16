@@ -1,10 +1,8 @@
-unetbootin (622-1) unstable; urgency=medium
+unetbootin (622-1) unstable; urgency=low
 
   [ Geza Kovacs ]
   * Imported Upstream version 622
   * added policykit file
-
-  [ geza ]
 
  -- Geza Kovacs <geza0kovacs@gmail.com>  Mon, 16 May 2016 01:02:36 -0700
 

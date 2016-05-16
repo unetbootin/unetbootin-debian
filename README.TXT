@@ -1,16 +1,16 @@
-UNetbootin Source Revision 623
+UNetbootin Source Revision 624
 Copyright Geza Kovacs
 Homepage at http://unetbootin.sourceforge.net
 Licensed under the GNU GPL v2 and above, components from other projects are licensed under their respective licenses
-Build generated on Mon May 16 01:48:07 PDT 2016
+Build generated on Mon May 16 02:07:10 PDT 2016
 
 Download using git:
 git clone https://github.com/gkovacs/unetbootin.git
 cd unetbootin
-git checkout b8c977f598aa9183d22ba9afe3bfd9739a491a5e
+git checkout b2cc79cd49c8508809dbf6aa6dce606cfbdaccf2
 
 Download using bzr:
-bzr branch http://bazaar.launchpad.net/~vcs-imports/unetbootin/trunk -r623
+bzr branch http://bazaar.launchpad.net/~vcs-imports/unetbootin/trunk -r624
 
 Build instructions at http://sourceforge.net/apps/trac/unetbootin/wiki/compile
 

@@ -13,6 +13,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 "14.04_NetInstall" << "14.04_NetInstall_x64" << "14.04_HdMedia" << "14.04_HdMedia_x64" << "14.04_Live" << "14.04_Live_x64" << \
 "15.10_NetInstall" << "15.10_NetInstall_x64" << "15.10_HdMedia" << "15.10_HdMedia_x64" << "15.10_Live" << "15.10_Live_x64" << \
 "16.04_NetInstall" << "16.04_NetInstall_x64" << "16.04_HdMedia" << "16.04_HdMedia_x64" << "16.04_Live" << "16.04_Live_x64" << \
+"16.10_NetInstall" << "16.10_NetInstall_x64" << "16.10_HdMedia" << "16.10_HdMedia_x64" << "16.10_Live" << "16.10_Live_x64" << \
+"17.04_NetInstall" << "17.04_NetInstall_x64" << "17.04_HdMedia" << "17.04_HdMedia_x64" << "17.04_Live" << "17.04_Live_x64" << \
 "Daily_Live" << "Daily_Live_x64"
 #endif
 
@@ -185,11 +187,11 @@ unetbootin::tr("<b>Homepage:</b> <a href=\"http://ophcrack.sourceforge.net/\">ht
 	"<b>Description:</b> Ophcrack can crack Windows passwords.<br/>"
 	"<b>Install Notes:</b> Ophcrack is booted and run in live mode; no installation is required to use it.") <<
 "XP-LiveCD-2.0" << "Vista-LiveCD-2.0"));
-distroselect->addItem("Parted Magic", (QStringList() << "Latest_Live" <<
+distroselect->addItem("Parted Magic", (QStringList() << "2.1_Live" <<
 unetbootin::tr("<b>Homepage:</b> <a href=\"http://partedmagic.com/\">http://partedmagic.com</a><br/>"
 	"<b>Description:</b> Parted Magic includes the GParted partition manager and other system utilities which can resize, copy, backup, and manipulate disk partitions.<br/>"
 	"<b>Install Notes:</b> Parted Magic is booted and run in live mode; no installation is required to use it.") <<
-"2.1_Live" << "Latest_Live"));
+"2.1_Live"));
 //distroselect->addItem("PCLinuxOS", (QStringList() << "KDE 2010" <<
 //unetbootin::tr("<b>Homepage:</b> <a href=\"http://www.pclinuxos.com/\">http://www.pclinuxos.com</a><br/>"
 //	"<b>Description:</b> PCLinuxOS is a user-friendly Mandriva-based distribution.<br/>"
@@ -267,3 +269,7 @@ unetbootin::tr("<b>Homepage:</b> <a href=\"http://www.zenwalk.org/\">http://www.
 	"<b>Description:</b> Zenwalk is a Slackware-based distribution featuring the XFCE desktop.<br/>"
 	"<b>Install Notes:</b> The Live version allows for booting in Live mode, from which the installer can optionally be launched.") <<
 "5.2"));
+distroselect->addItem("3CX", (QStringList() << "pbx_debian_x64" <<
+unetbootin::tr("<b>Homepage:</b> <a href=\"https://www.3cx.com/\">https://www.3cx.com</a><br/>"
+    "<b>Description:</b> 3CX is a specialist, Debian-based Linux distribution designed to run a complete unified communications platform. It provides a complete open standards-based IP PBX and phone system that works with popular SIP trunks and IP phones. It will automatically configure all supported peripherals and it also comes with clients for Windows, OS X, iOS and Android. The ISO image includes a free license for the 3CX PBX edition.<br/>") <<
+"pbx_debian_x64"));

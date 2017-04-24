@@ -4,6 +4,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG += release \
     static
+
 HEADERS += unetbootin.h
 FORMS += unetbootin.ui
 SOURCES += main.cpp \

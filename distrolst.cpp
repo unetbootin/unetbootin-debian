@@ -18,6 +18,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 #ifndef ubunturelnamereplace
 #define ubunturelnamereplace \
 	relname \
+    .replace("17.04", "zesty") \
     .replace("16.10", "yakkety") \
     .replace("16.04", "xenial") \
     .replace("15.10", "wily") \
@@ -785,17 +786,9 @@ if (nameDistro == "Ophcrack")
 
 if (nameDistro == "Parted Magic")
 {
-	if (relname == "2.1")
-	{
-		downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-kernel", QString("%1ubnkern").arg(targetPath));
-		downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-initrd", QString("%1ubninit").arg(targetPath));
-		kernelOpts = "noapic root=/dev/ram0 init=/linuxrc ramdisk_size=200000 keymap=us liveusb vga=791 quiet toram";	
-	}
-	else
-	{
-        downloadfile("http://partedmagic.com/partedmagic-latest.iso", isotmpf);
-		extractiso(isotmpf);
-	}
+	downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-kernel", QString("%1ubnkern").arg(targetPath));
+	downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-initrd", QString("%1ubninit").arg(targetPath));
+	kernelOpts = "noapic root=/dev/ram0 init=/linuxrc ramdisk_size=200000 keymap=us liveusb vga=791 quiet toram";
 }
 
 if (nameDistro == "PCLinuxOS")
@@ -1196,6 +1189,12 @@ if (nameDistro == "Zenwalk")
 {
 	downloadfile(QString("ftp://zenwalk.mirrors.tds.net/pub/linux/zenlive/zenwalk-live-%1.iso").arg(relname), isotmpf);
 	extractiso(isotmpf);
+}
+
+if (nameDistro == "3CX")
+{
+    downloadfile(QString("http://unetbootin.sourceforge.net/distros/3CX/pbx_debian_x64.php"), isotmpf);
+    extractiso(isotmpf);
 }
 
 #endif

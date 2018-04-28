@@ -1,3 +1,9 @@
+unetbootin (661-1) unstable; urgency=medium
+
+  * Import Upstream version 661
+
+ -- Geza Kovacs <geza0kovacs@gmail.com>  Sat, 28 Apr 2018 04:27:36 -0700
+
 unetbootin (657-1) unstable; urgency=medium
 
   * Import Upstream version 657

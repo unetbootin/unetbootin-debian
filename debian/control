@@ -10,8 +10,8 @@ Homepage: http://unetbootin.sourceforge.net
 
 Package: unetbootin
 Architecture: amd64 i386
-Depends: ${misc:Depends}, ${shlibs:Depends}, mtools, p7zip-full, syslinux, syslinux-common, udev, policykit-1 | gksu | kdesudo
-Recommends: extlinux, unetbootin-translations
+Depends: ${misc:Depends}, ${shlibs:Depends}, mtools, p7zip-full, syslinux, syslinux-common, udev
+Recommends: extlinux, unetbootin-translations, gksu | kdesudo
 Description: installer of Linux/BSD distributions to a partition or USB drive
  UNetbootin allows for the installation of various Linux/BSD distributions to a
  partition or USB drive, so it's no different from a standard install, only it

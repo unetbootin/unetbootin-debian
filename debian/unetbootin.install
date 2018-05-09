@@ -1,4 +1,5 @@
 unetbootin.xpm usr/share/pixmaps
-unetbootin usr/bin
+unetbootin usr/bin/unetbootin.elf
+unetbootin.wrapper usr/bin/unetbootin
 unetbootin.desktop usr/share/applications
 org.unetbootin.pkexec.unetbootin.policy /usr/share/polkit-1/actions

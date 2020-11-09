@@ -1,3 +1,10 @@
+unetbootin (700-1) unstable; urgency=medium
+
+  * Import Upstream version 700.
+  * Switch to Qt 5.
+
+ -- Geza Kovacs <geza0kovacs@gmail.com>  Mon, 09 Nov 2020 01:38:04 -0800
+
 unetbootin (681-1) unstable; urgency=medium
 
   * Import Upstream version 681

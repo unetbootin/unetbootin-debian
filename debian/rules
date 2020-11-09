@@ -9,7 +9,7 @@
 
 build: build-stamp
 build-stamp:
-	qmake-qt4 "QMAKE_CXXFLAGS_RELEASE += $(CFLAGS)"
+	/usr/lib/$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)/qt5/bin/qmake "QMAKE_CXXFLAGS_RELEASE += $(CFLAGS)"
 	$(MAKE)
 	touch $@
 
@@ -23,7 +23,7 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep:
-	lrelease-qt4 unetbootin.pro
+	/usr/lib/$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)/qt5/bin/lrelease unetbootin.pro
 	dh_install --sourcedir=$(CURDIR) -punetbootin-translations
 	dh binary-indep
 

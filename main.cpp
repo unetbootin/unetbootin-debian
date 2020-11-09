@@ -9,6 +9,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 #include "unetbootin.h"
 
+#include <QMessageBox>
+
 #ifdef Q_OS_WIN32
 
 void configsysUndo(QString uninstPathL)
@@ -299,16 +301,6 @@ int main(int argc, char **argv)
             gksuarg1 += QString("'");
             QStringList gksuargs;
             gksuargs.append(gksuarg1);
-
-            /*
-            QString pkexeclocation = checkforgraphicalsu("pkexec");
-            if (pkexeclocation != "REQCNOTFOUND" && app.applicationFilePath() == "/usr/bin/unetbootin" && QFile::exists("/usr/share/polkit-1/actions/org.unetbootin.pkexec.unetbootin.policy"))
-            {
-                //QProcess::startDetached(QString("%1 %2 %3").arg(gksulocation).arg(app.applicationFilePath()).arg(argsconc));
-                QProcess::startDetached(QString("%1 %2 %3").arg(pkexeclocation).arg(app.applicationFilePath()).arg(argsconc));
-                return 0;
-            }
-            */
             QString gksulocation = checkforgraphicalsu("gksu");
 			if (gksulocation != "REQCNOTFOUND")
 			{
@@ -341,7 +333,7 @@ int main(int argc, char **argv)
 			rootmsgb.setIcon(QMessageBox::Warning);
 			rootmsgb.setWindowTitle(uninstaller::tr("Must run as root"));
 			rootmsgb.setTextFormat(Qt::RichText);
-            rootmsgb.setText(uninstaller::tr("%2 must be run as root. Close it, and re-run using either:<br/><b>sudo QT_X11_NO_MITSHM=1 %1</b><br/>or:<br/><b>su -c 'QT_X11_NO_MITSHM=1 %1'</b>").arg(app.applicationFilePath()).arg(UNETBOOTINB));
+            rootmsgb.setText(uninstaller::tr("%2 must be run as root. Run it from the command line using:<br/><b>sudo QT_X11_NO_MITSHM=1 %1</b><br/>").arg(app.applicationFilePath()).arg(UNETBOOTINB));
 			rootmsgb.setStandardButtons(QMessageBox::Ok);
 			switch (rootmsgb.exec())
 			{
@@ -350,6 +342,17 @@ int main(int argc, char **argv)
 				default:
 					break;
 			}
+     return 0;
+     /*
+     QString pkexeclocation = checkforgraphicalsu("pkexec");
+     if (pkexeclocation != "REQCNOTFOUND" && app.applicationFilePath() == "/usr/bin/unetbootin" && QFile::exists("/usr/share/polkit-1/actions/org.unetbootin.pkexec.unetbootin.policy"))
+     {
+         QProcess::startDetached(QString("%1 %2").arg(pkexeclocation).arg(app.applicationFilePath()));
+         //QProcess::startDetached(QString("%1 %2 %3").arg(gksulocation).arg(app.applicationFilePath()).arg(argsconc));
+         //QProcess::startDetached(QString("%1 %2 %3").arg(pkexeclocation).arg(app.applicationFilePath()).arg(argsconc));
+         return 0;
+     }
+     */
 #endif
 #ifdef Q_OS_MAC
             /*
@@ -361,7 +364,29 @@ int main(int argc, char **argv)
             */
             //qDebug() << QString("osascript -e 'do shell script \"%1 %2\" with administrator privileges'").arg(app.applicationFilePath()).arg(argsconc);
             //QProcess::startDetached(QString("osascript -e 'do shell script \"%1 %2\" with administrator privileges'").arg(app.applicationFilePath()).arg(argsconc));
-            QProcess::startDetached("osascript", QStringList() << "-e" << QString("do shell script \"'%1' %2\" with administrator privileges").arg(app.applicationFilePath()).arg(argsconcSingleQuote));
+			QProcess process;
+			process.start("sw_vers", QStringList() << "-productVersion");
+			process.waitForFinished(-1); // will wait forever until finished
+			QString stdout = QString(process.readAllStandardOutput()).trimmed();
+			bool is_mojave_or_above = false;
+			if (stdout.count('.') == 2) {
+				QStringList version_parts = stdout.split('.');
+				int major_version = version_parts[0].toInt();
+				int sub_version = version_parts[1].toInt();
+				if (major_version == 10 && sub_version >= 14) {
+					is_mojave_or_above = true;
+				} else if (major_version > 10) {
+					is_mojave_or_above = true;
+				}
+			}
+			if (is_mojave_or_above) {
+				QDir resourceDir = QDir(QApplication::applicationDirPath());
+				resourceDir.cdUp();
+				resourceDir.cd("Resources");
+				QProcess::startDetached("bash", QStringList() << "-c" << QString("SUDO_ASKPASS='%1' sudo --askpass '%2' %3").arg(resourceDir.absoluteFilePath("askpass.js")).arg(app.applicationFilePath()).arg(argsconcSingleQuote));
+			} else {
+				QProcess::startDetached("osascript", QStringList() << "-e" << QString("do shell script \"'%1' %2\" with administrator privileges").arg(app.applicationFilePath()).arg(argsconcSingleQuote));
+			}
             return 0;
 #endif
 		}
@@ -380,18 +405,16 @@ int main(int argc, char **argv)
 		uninstmsgb.setIcon(QMessageBox::Information);
 		uninstmsgb.setWindowTitle(uninstaller::tr("%1 Uninstaller").arg(UNETBOOTINB));
 		uninstmsgb.setText(uninstaller::tr("%1 is currently installed. Remove the existing version?").arg(UNETBOOTINB));
- 		uninstmsgb.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
- 		switch (uninstmsgb.exec())
- 		{
- 			case QMessageBox::Ok:
- 			{
- 				ubnUninst();
-			}
-			case QMessageBox::Cancel:
-				break;
-	 		default:
-				break;
- 		}
+		uninstmsgb.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+		switch (uninstmsgb.exec())
+		{
+		case QMessageBox::Ok:
+			ubnUninst();
+			break;
+		case QMessageBox::Cancel:
+		default:
+			break;
+		}
 		return 0;
 	}
 #endif

@@ -11,13 +11,21 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 #define debianrelnamereplace \
 	relname \
 	.replace("unstable", "sid") \
-    .replace("testing", "stretch") \
-    .replace("stable", "jessie");
+    .replace("testing", "bullseye") \
+    .replace("stable", "buster");
 #endif
 
 #ifndef ubunturelnamereplace
 #define ubunturelnamereplace \
 	relname \
+    .replace("20.10", "groovy") \
+    .replace("20.04", "focal") \
+    .replace("19.10", "eoan") \
+    .replace("19.04", "disco") \
+    .replace("18.10", "cosmic") \
+    .replace("18.04", "bionic") \
+    .replace("17.10", "artful") \
+    .replace("17.04", "zesty") \
     .replace("16.10", "yakkety") \
     .replace("16.04", "xenial") \
     .replace("15.10", "wily") \
@@ -277,14 +285,14 @@ if (nameDistro == "CloneZilla")
 if (nameDistro == "Damn Small Linux")
 {
 	downloadfile(fileFilterNetDir(QStringList() << 
-	"ftp://ibiblio.org/pub/Linux/distributions/damnsmall/current/" << 
+//	"ftp://ibiblio.org/pub/Linux/distributions/damnsmall/current/" <<
 	"http://ibiblio.org/pub/Linux/distributions/damnsmall/current/" << 
-	"ftp://gd.tuwien.ac.at/opsys/linux/damnsmall/current/" << 
+//	"ftp://gd.tuwien.ac.at/opsys/linux/damnsmall/current/" <<
 	"http://gd.tuwien.ac.at/opsys/linux/damnsmall/current/" << 
-	"ftp://ftp.is.co.za/linux/distributions/damnsmall/current/" << 
+//	"ftp://ftp.is.co.za/linux/distributions/damnsmall/current/" <<
 //	"ftp://ftp.belnet.be/packages/damnsmalllinux/current/" << 
 	"http://ftp.belnet.be/packages/damnsmalllinux/current/" << 
-	"ftp://ftp.heanet.ie/mirrors/damnsmalllinux.org/current/" << 
+//	"ftp://ftp.heanet.ie/mirrors/damnsmalllinux.org/current/" <<
 	"http://ftp.heanet.ie/mirrors/damnsmalllinux.org/current/"
 //	"ftp://ftp.oss.cc.gatech.edu/pub/linux/distributions/damnsmall/current/" << 
 //	"http://ftp.oss.cc.gatech.edu/pub/linux/distributions/damnsmall/current/" <<
@@ -332,9 +340,9 @@ if (nameDistro == "Debian")
 if (nameDistro == "Dreamlinux")
 {
 	downloadfile(fileFilterNetDir(QStringList() << 
-	"ftp://ftp.nluug.nl/pub/os/Linux/distr/dreamlinux/stable/" << 
+//	"ftp://ftp.nluug.nl/pub/os/Linux/distr/dreamlinux/stable/" <<
 	"http://ftp.nluug.nl/pub/os/Linux/distr/dreamlinux/stable/" << 
-	"ftp://ftp.surfnet.nl/pub/os/Linux/distr/dreamlinux/stable/" << 
+//	"ftp://ftp.surfnet.nl/pub/os/Linux/distr/dreamlinux/stable/" <<
 	"http://ftp.surfnet.nl/pub/os/Linux/distr/dreamlinux/stable/"
 	, 524288000, 1048576000, QList<QRegExp>() << 
 	QRegExp(".iso$", Qt::CaseInsensitive) << 
@@ -375,26 +383,22 @@ if (nameDistro == "Elive")
 
 if (nameDistro == "Fedora")
 {
-    QString minorarch = "";
 	if (isarch64)
 	{
 		cpuarch = "x86_64";
-        minorarch = "x86_64";
 	}
 	else
 	{
 		cpuarch = "i386";
-        minorarch = "i686";
 	}
 	if (islivecd)
 	{
         downloadfile(fileFilterNetDir(QStringList() <<
-        "http://download.fedoraproject.org/pub/fedora/linux/releases/"+relname+"/Live/"+cpuarch+"/"
+        "http://download.fedoraproject.org/pub/fedora/linux/releases/"+relname+"/Workstation/"+cpuarch+"/iso/"
         , 524288000, 2233125376, QList<QRegExp>() <<
         QRegExp(".iso$", Qt::CaseInsensitive) <<
         QRegExp("Fedora", Qt::CaseInsensitive) <<
-        QRegExp("Live", Qt::CaseInsensitive) <<
-        QRegExp("LXDE", Qt::CaseInsensitive)
+        QRegExp("Live", Qt::CaseInsensitive)
         ), isotmpf);
         extractiso(isotmpf);
 	}
@@ -402,15 +406,15 @@ if (nameDistro == "Fedora")
 	{
 		if (relname == "rawhide")
 		{
-            downloadfile(QString("download.fedoraproject.org/pub/fedora/linux/development/%1/os/images/pxeboot/vmlinuz").arg(cpuarch), QString("%1ubnkern").arg(targetPath));
-            downloadfile(QString("download.fedoraproject.org/pub/fedora/linux/development/%1/os/images/pxeboot/initrd.img").arg(cpuarch), QString("%1ubninit").arg(targetPath));
-			postinstmsg = unetbootin::tr("\n*IMPORTANT* After rebooting, ignore any error messages and select back if prompted for a CD, then go to the main menu, select the 'Start Installation' option, choose 'Network' as the source, choose 'HTTP' as the protocol, enter 'download.fedora.redhat.com' when prompted for a server, and enter '/pub/fedora/linux/development/%1/os' when asked for the folder.").arg(cpuarch);
+            downloadfile(QString("download.fedoraproject.org/pub/fedora/linux/development/rawhide/Workstation/%1/os/images/pxeboot/vmlinuz").arg(cpuarch), QString("%1ubnkern").arg(targetPath));
+            downloadfile(QString("download.fedoraproject.org/pub/fedora/linux/development/rawhide/Workstation/%1/os/images/pxeboot/initrd.img").arg(cpuarch), QString("%1ubninit").arg(targetPath));
+			postinstmsg = unetbootin::tr("\n*IMPORTANT* After rebooting, ignore any error messages and select back if prompted for a CD, then go to the main menu, select the 'Start Installation' option, choose 'Network' as the source, choose 'HTTP' as the protocol, enter 'download.fedoraproject.org' when prompted for a server, and enter '/pub/fedora/linux/development/rawhide/Workstation/%1/os' when asked for the folder.").arg(cpuarch);
         }
 		else
 		{
-            downloadfile(QString("http://download.fedoraproject.org/pub/fedora/linux/releases/%1/Fedora/%2/os/images/pxeboot/vmlinuz").arg(relname, cpuarch), QString("%1ubnkern").arg(targetPath));
-            downloadfile(QString("http://download.fedoraproject.org/pub/fedora/linux/releases/%1/Fedora/%2/os/images/pxeboot/initrd.img").arg(relname, cpuarch), QString("%1ubninit").arg(targetPath));
-			postinstmsg = unetbootin::tr("\n*IMPORTANT* After rebooting, ignore any error messages and select back if prompted for a CD, then go to the main menu, select the 'Start Installation' option, choose 'Network' as the source, choose 'HTTP' as the protocol, enter 'download.fedora.redhat.com' when prompted for a server, and enter '/pub/fedora/linux/releases/%1/Fedora/%2/os' when asked for the folder.").arg(relname, cpuarch);
+            downloadfile(QString("http://download.fedoraproject.org/pub/fedora/linux/releases/%1/Workstation/%2/os/images/pxeboot/vmlinuz").arg(relname, cpuarch), QString("%1ubnkern").arg(targetPath));
+            downloadfile(QString("http://download.fedoraproject.org/pub/fedora/linux/releases/%1/Workstation/%2/os/images/pxeboot/initrd.img").arg(relname, cpuarch), QString("%1ubninit").arg(targetPath));
+			postinstmsg = unetbootin::tr("\n*IMPORTANT* After rebooting, ignore any error messages and select back if prompted for a CD, then go to the main menu, select the 'Start Installation' option, choose 'Network' as the source, choose 'HTTP' as the protocol, enter 'download.fedoraproject.org' when prompted for a server, and enter '/pub/fedora/linux/releases/%1/Workstation/%2/os' when asked for the folder.").arg(relname, cpuarch);
 		}
 		kernelOpts = "splash=silent showopts";
 	}
@@ -470,16 +474,16 @@ if (nameDistro == "Frugalware")
 	QStringList frugalwaremirrorsL = QStringList() <<
 //	"ftp://ftp5.frugalware.org/packages/frugalware/pub/frugalware-"+relname+"/boot/" <<
 //	"http://www5.frugalware.org/packages/frugalware/pub/frugalware-"+relname+"/boot/" <<
-	"ftp://ftp8.frugalware.org/distro/frugalware/frugalware-"+relname+"/boot/" <<
+//	"ftp://ftp8.frugalware.org/distro/frugalware/frugalware-"+relname+"/boot/" <<
 	"http://www8.frugalware.org/distro/frugalware/frugalware-"+relname+"/boot/" <<
-	"ftp://ftp10.frugalware.org/pub/linux/frugalware/frugalware-"+relname+"/boot/" <<
+//	"ftp://ftp10.frugalware.org/pub/linux/frugalware/frugalware-"+relname+"/boot/" <<
 	"http://www10.frugalware.org/pub/linux/frugalware/frugalware-"+relname+"/boot/" <<
-	"ftp://ftp12.frugalware.org/mirrors/ftp.frugalware.org/pub/frugalware/frugalware-"+relname+"/boot/" <<
+//	"ftp://ftp12.frugalware.org/mirrors/ftp.frugalware.org/pub/frugalware/frugalware-"+relname+"/boot/" <<
 	"http://www12.frugalware.org/mirrors/ftp.frugalware.org/pub/frugalware/frugalware-"+relname+"/boot/" <<
-	"ftp://ftp4.frugalware.org/pub/linux/distributions/frugalware/frugalware-"+relname+"/boot/" <<
-	"http://www4.frugalware.org/pub/linux/distributions/frugalware/frugalware-"+relname+"/boot/" <<
-	"ftp://ftp2.frugalware.org/frugalware/pub/frugalware/frugalware-"+relname+"/boot/" <<
-	"ftp://ftp3.frugalware.org/mirrors/frugalware/pub/frugalware/frugalware-"+relname+"/boot/";
+//	"ftp://ftp4.frugalware.org/pub/linux/distributions/frugalware/frugalware-"+relname+"/boot/" <<
+	"http://www4.frugalware.org/pub/linux/distributions/frugalware/frugalware-"+relname+"/boot/"; //<<
+//	"ftp://ftp2.frugalware.org/frugalware/pub/frugalware/frugalware-"+relname+"/boot/" <<
+//	"ftp://ftp3.frugalware.org/mirrors/frugalware/pub/frugalware/frugalware-"+relname+"/boot/";
 	downloadfile(fileFilterNetDir(frugalwaremirrorsL
 	, 307200, 104857600, QList<QRegExp>() << 
 	QRegExp("vmlinuz", Qt::CaseInsensitive) <<
@@ -553,8 +557,8 @@ if (nameDistro == "Kaspersky Rescue Disk")
 	{
 		downloadfile(fileFilterNetDir(QStringList() <<
 		"http://devbuilds.kaspersky-labs.com/devbuilds/RescueDisk/" <<
-		"http://ftp.kaspersky.com/devbuilds/RescueDisk/" <<
-		"ftp://ftp.kaspersky.com/devbuilds/RescueDisk/"
+		"http://ftp.kaspersky.com/devbuilds/RescueDisk/" //<<
+//		"ftp://ftp.kaspersky.com/devbuilds/RescueDisk/"
 		, 9288000, 1048576000, QList<QRegExp>() <<
 		QRegExp(".iso$", Qt::CaseInsensitive) <<
 		QRegExp("k\\S{0,}.iso$", Qt::CaseInsensitive)
@@ -564,8 +568,8 @@ if (nameDistro == "Kaspersky Rescue Disk")
 	{
 		downloadfile(fileFilterNetDir(QStringList() <<
 		"http://devbuilds.kaspersky-labs.com/devbuilds/RescueDisk10/" <<
-		"http://ftp.kaspersky.com/devbuilds/RescueDisk10/" <<
-		"ftp://ftp.kaspersky.com/devbuilds/RescueDisk10/"
+		"http://ftp.kaspersky.com/devbuilds/RescueDisk10/" //<<
+//		"ftp://ftp.kaspersky.com/devbuilds/RescueDisk10/"
 		, 9288000, 1048576000, QList<QRegExp>() <<
 		QRegExp(".iso$", Qt::CaseInsensitive) <<
 		QRegExp("k\\S{0,}.iso$", Qt::CaseInsensitive)
@@ -627,11 +631,11 @@ if (nameDistro == "Linux Mint")
 	QString("http://mirror.sov.uk.goscomb.net/linuxmint.com/stable/%1/").arg(relname) <<
 	QString("http://mirror.csclub.uwaterloo.ca/linuxmint/stable/%1/").arg(relname) <<
 	QString("http://mirror.aarnet.edu.au/pub/linuxmint/stable/%1/").arg(relname) <<
-	QString("http://mirror.waia.asn.au/pub/linux/linuxmint/linuxmint-isos/linuxmint.com/stable/%1/").arg(relname) <<
-	QString("ftp://mirrors.secution.com/linuxmint.com/stable/%1/").arg(relname) <<
-	QString("ftp://ftp.is.co.za/mirror/linuxmint.com/stable/%1/").arg(relname) <<
-	QString("ftp://ftp.tpnet.pl/pub/linux/linuxmint/isos/stable/%1/").arg(relname) <<
-	QString("ftp://mirror.unej.ac.id/pub/iso/linux-mint/stable/%1/").arg(relname)
+	QString("http://mirror.waia.asn.au/pub/linux/linuxmint/linuxmint-isos/linuxmint.com/stable/%1/").arg(relname) //<<
+//	QString("ftp://mirrors.secution.com/linuxmint.com/stable/%1/").arg(relname) <<
+//	QString("ftp://ftp.is.co.za/mirror/linuxmint.com/stable/%1/").arg(relname) <<
+//	QString("ftp://ftp.tpnet.pl/pub/linux/linuxmint/isos/stable/%1/").arg(relname) <<
+//	QString("ftp://mirror.unej.ac.id/pub/iso/linux-mint/stable/%1/").arg(relname)
 	, 61440000, 1048576000, mintregex), isotmpf);
 	extractiso(isotmpf);
 }
@@ -678,11 +682,11 @@ if (nameDistro == "MEPIS")
 	if (relname == "antix")
 	{
 		downloadfile(fileFilterNetDir(QStringList() << 
-		"ftp://ftp.ibiblio.org/pub/linux/distributions/mepis/released/antix/" << 
+//		"ftp://ftp.ibiblio.org/pub/linux/distributions/mepis/released/antix/" <<
 		"http://distro.ibiblio.org/pub/linux/distributions/mepis/released/antix/" <<
-		"ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/mepis/released/antix/" << 
+//		"ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/mepis/released/antix/" <<
 		"http://ftp.uwsg.indiana.edu/linux/mepis/released/antix/" <<
-		"ftp://ftp.ussg.iu.edu/pub/linux/mepis/released/antix/" <<
+//		"ftp://ftp.ussg.iu.edu/pub/linux/mepis/released/antix/" <<
 		"http://mirror.cs.vt.edu/pub/MEPIS/antix/"
 		, 61440000, 1048576000, QList<QRegExp>() << 
 		QRegExp("antiX\\S{0,}.iso$", Qt::CaseInsensitive) << 
@@ -692,11 +696,11 @@ if (nameDistro == "MEPIS")
 	else
 	{
 		downloadfile(fileFilterNetDir(QStringList() << 
-		"ftp://ftp.ibiblio.org/pub/linux/distributions/mepis/released/" << 
+//		"ftp://ftp.ibiblio.org/pub/linux/distributions/mepis/released/" <<
 		"http://distro.ibiblio.org/pub/linux/distributions/mepis/released/" <<
-		"ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/mepis/released/" << 
+//		"ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/mepis/released/" <<
 		"http://ftp.uwsg.indiana.edu/linux/mepis/released/" <<
-		"ftp://ftp.ussg.iu.edu/pub/linux/mepis/released/" <<
+//		"ftp://ftp.ussg.iu.edu/pub/linux/mepis/released/" <<
 		"http://mirror.cs.vt.edu/pub/MEPIS/"
 		, 61440000, 1048576000, QList<QRegExp>() << 
 		QRegExp("MEPIS\\S{0,}.iso$", Qt::CaseInsensitive) << 
@@ -785,17 +789,9 @@ if (nameDistro == "Ophcrack")
 
 if (nameDistro == "Parted Magic")
 {
-	if (relname == "2.1")
-	{
-		downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-kernel", QString("%1ubnkern").arg(targetPath));
-		downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-initrd", QString("%1ubninit").arg(targetPath));
-		kernelOpts = "noapic root=/dev/ram0 init=/linuxrc ramdisk_size=200000 keymap=us liveusb vga=791 quiet toram";	
-	}
-	else
-	{
-        downloadfile("http://partedmagic.com/partedmagic-latest.iso", isotmpf);
-		extractiso(isotmpf);
-	}
+	downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-kernel", QString("%1ubnkern").arg(targetPath));
+	downloadfile("http://downloads.sourceforge.net/sourceforge/lubi/partedmagic-2.1-initrd", QString("%1ubninit").arg(targetPath));
+	kernelOpts = "noapic root=/dev/ram0 init=/linuxrc ramdisk_size=200000 keymap=us liveusb vga=791 quiet toram";
 }
 
 if (nameDistro == "PCLinuxOS")
@@ -816,9 +812,9 @@ if (nameDistro == "PCLinuxOS")
 if (nameDistro == "Puppy Linux")
 {
 	downloadfile(fileFilterNetDir(QStringList() << 
-	"ftp://ibiblio.org/pub/linux/distributions/puppylinux/" << 
+//	"ftp://ibiblio.org/pub/linux/distributions/puppylinux/" <<
 	"http://distro.ibiblio.org/pub/linux/distributions/puppylinux/" <<
-	"ftp://ftp.nluug.nl/ftp/pub/os/Linux/distr/puppylinux/" << 
+//	"ftp://ftp.nluug.nl/ftp/pub/os/Linux/distr/puppylinux/" <<
 	"http://ftp.nluug.nl/ftp/pub/os/Linux/distr/puppylinux/"
 	, 61440000, 1048576000, QList<QRegExp>() << 
 	QRegExp(".iso$", Qt::CaseInsensitive) << 
@@ -1029,7 +1025,7 @@ if (nameDistro == "Ubuntu")
 			downloadfile(fileFilterNetDir(QStringList() << 
 			"http://releases.ubuntu.com/"+relname << 
 			"http://releases.ubuntu.com/releases/"+relname <<
-			"ftp://releases.ubuntu.com/releases/.pool/" << 
+//			"ftp://releases.ubuntu.com/releases/.pool/" <<
 			"http://mirrors.gigenet.com/ubuntu/"+relname <<
 			"http://mirrors.easynews.com/linux/ubuntu-releases/"+relname <<
 			"http://www.gtlib.gatech.edu/pub/ubuntu-releases/"+relname <<
@@ -1196,6 +1192,12 @@ if (nameDistro == "Zenwalk")
 {
 	downloadfile(QString("ftp://zenwalk.mirrors.tds.net/pub/linux/zenlive/zenwalk-live-%1.iso").arg(relname), isotmpf);
 	extractiso(isotmpf);
+}
+
+if (nameDistro == "3CX")
+{
+    downloadfile(QString("http://unetbootin.sourceforge.net/distros/3CX/pbx_debian_x64.php"), isotmpf);
+    extractiso(isotmpf);
 }
 
 #endif

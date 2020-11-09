@@ -152,19 +152,13 @@ signals:
 	void finished();
 };
 
-class ubngetrequestheader : public QHttpRequestHeader
-{
-public:
-	ubngetrequestheader(QString urhost, QString urpath);
-};
-
 class randtmpfile : public QFile
 {
 public:
 	randtmpfile(QString rfpath, QString rfextn);
 	static QString getrandfilename(QString rfpath, QString rfextn);
 };
-
+/*
 class nDirListStor : public QObject
 {
 	Q_OBJECT
@@ -178,7 +172,7 @@ public:
 public slots:
 	void sAppendSelfUrlInfoList(QUrlInfo curDirUrl);
 };
-
+*/
 class unetbootin : public QWidget, private Ui::unetbootinui
 {
 	Q_OBJECT
@@ -279,13 +273,13 @@ public:
 	QPair<QPair<QStringList, QStringList>, QPair<QStringList, QStringList> > searchforincludesfileL(QString includesfile, QString archivefile, QStringList archivefileconts, QStringList visitedincludes);
 	QString searchforgrub2includesfile(QString includesfile, QString archivefile, QStringList archivefileconts, QStringList visitedincludes);
 	QPair<QPair<QStringList, QStringList>, QPair<QStringList, QStringList> > searchforgrub2includesfileL(QString includesfile, QString archivefile, QStringList archivefileconts, QStringList visitedincludes);
-	void downloadfile(QString fileurl, QString targetfile, int minsize);
-	QString downloadpagecontents(QString pageurl);
-	QStringList lstFtpDirFiles(QString ldfDirStringUrl, int ldfMinSize, int ldfMaxSize);
+	void downloadfile(QString fileurl, QString targetfile, qint64 minsize);
+	QString downloadpagecontents(QUrl pageurl);
+	QStringList lstFtpDirFiles(QString ldfDirStringUrl, qint64 ldfMinSize, qint64 ldfMaxSize);
 	QStringList lstHttpDirFiles(QString ldfDirStringUrl);
-	QStringList lstNetDirFiles(QString ldfDirStringUrl, int ldfMinSize, int ldfMaxSize);
-	QPair<QString, int> weightedFilterNetDir(QString ldfDirStringUrl, int ldfMinSize, int ldfMaxSize, QList<QRegExp> ldfFileMatchExp);
-	QString fileFilterNetDir(QStringList ldfDirStringUrlList, int ldfMinSize, int ldfMaxSize, QList<QRegExp> ldfFileMatchExp);
+	QStringList lstNetDirFiles(QString ldfDirStringUrl, qint64 ldfMinSize, qint64 ldfMaxSize);
+	QPair<QString, int> weightedFilterNetDir(QString ldfDirStringUrl, qint64 ldfMinSize, qint64 ldfMaxSize, QList<QRegExp> ldfFileMatchExp);
+	QString fileFilterNetDir(QStringList ldfDirStringUrlList, qint64 ldfMinSize, qint64 ldfMaxSize, QList<QRegExp> ldfFileMatchExp);
 	QPair<QString, int> filterBestMatch(QStringList ufStringList, QList<QRegExp> filterExpList);
 	static QString callexternapp(QString xexecFile, QString xexecParm);
 	static QString callexternappWriteToStdin(QString xexecFile, QString xexecParm, QString xwriteToStdin);
@@ -295,9 +289,11 @@ public:
 #ifdef Q_OS_MAC
 	QString getlabel(QString voldrive, QString diskutilinfo);
 	QString getuuid(QString voldrive, QString diskutilinfo);
+	bool is_external_drive_macos(const QString &drivename);
 #endif
 	void refreshdriveslist();
 	QStringList listcurdrives();
+	QStringList matchinglist(QRegExp regex, QString text);
 	QStringList listsanedrives();
 	QStringList listalldrives();
 	void replaceTextInFile(QString repfilepath, QRegExp replaceme, QString replacewith);
@@ -340,9 +336,9 @@ public:
 
 private slots:
 	void on_distroselect_currentIndexChanged(int distroselectIndex);
-	void on_typeselect_currentIndexChanged(int typeselectIndex);
-	void on_dverselect_currentIndexChanged();
-	void on_diskimagetypeselect_currentIndexChanged();
+	void on_typeselect_currentIndexChanged(int);
+	void on_dverselect_currentIndexChanged(int);
+	void on_diskimagetypeselect_currentIndexChanged(int);
 	void on_FloppyFileSelector_clicked();
 	void on_KernelFileSelector_clicked();
 	void on_InitrdFileSelector_clicked();
@@ -351,7 +347,6 @@ private slots:
 	void on_fexitbutton_clicked();
 
 public slots:
-	void dlprogressupdate(int dlbytes, int maxbytes);
 	void dlprogressupdate64(qint64 dlbytes, qint64 maxbytes);
 	void cpprogressupdate64(qint64 dlbytes, qint64 maxbytes);
 	void on_okbutton_clicked();

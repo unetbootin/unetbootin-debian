@@ -11,8 +11,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 #define ubuntuverlist \
 "16.04_NetInstall" << "16.04_NetInstall_x64" << "16.04_HdMedia" << "16.04_HdMedia_x64" << "16.04_Live" << "16.04_Live_x64" << \
 "18.04_NetInstall" << "18.04_NetInstall_x64" << "18.04_HdMedia" << "18.04_HdMedia_x64" << "18.04_Live_x64" << \
-"19.10_NetInstall_x64" << "19.10_HdMedia_x64" << "19.10_Live_x64" << \
 "20.04_Live_x64" << \
+"20.10_Live_x64" << \
 "Daily_Live" << "Daily_Live_x64"
 #endif
 
@@ -138,7 +138,7 @@ unetbootin::tr("<b>Homepage:</b> <a href=\"https://linuxconsole.org/\">https://l
 unetbootin::tr("<b>Homepage:</b> <a href=\"https://linuxmint.com/\">https://linuxmint.com</a><br/>"
 	"<b>Description:</b> Linux Mint is a user-friendly Ubuntu-based distribution which includes additional proprietary codecs and other software by default.<br/>"
 	"<b>Install Notes:</b> The Live version allows for booting in Live mode, from which the installer can optionally be launched.") <<
-    "19.2_Live" << "19.2_Live_x64"));
+    "19.2_Live" << "19.2_Live_x64"<<"19.3_Live"<<"19.3_Live_x64"<<"20_Live_x64"));
 distroselect->addItem("Lubuntu", (QStringList() << "20.04_Live_x64" <<
 unetbootin::tr("<b>Homepage:</b> <a href=\"https://www.lubuntu.net/\">https://www.lubuntu.net</a><br/>"
 	"<b>Description:</b> Lubuntu is an official Ubuntu derivative featuring the LXDE desktop.<br/>"
